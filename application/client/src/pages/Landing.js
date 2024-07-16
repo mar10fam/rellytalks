@@ -10,14 +10,14 @@ const Landing = () => {
                 <div className="flex justify-center mt-4">
                     <div className="relative w-[70%] bg-neutral text-white flex rounded-full overflow-hidden">
                         <div
-                            className={`flex-1 py-2 text-center cursor-pointer ${selected === 'Sign In' ? 'bg-[#7A4DC4]' : 'hover:bg-secondary'}`}
+                            className={`flex-1 py-2 pl-[5%] text-center cursor-pointer ${selected === 'Sign In' ? 'bg-[#7A4DC4]' : 'hover:bg-secondary'}`}
                             onClick={() => setSelected('Sign In')}
                         >
                             Sign In
                         </div>
                         <div className="absolute inset-0 m-auto w-10 h-10 bg-[#7A4DC4] rounded-full"></div>
                         <div
-                            className={`flex-1 py-2 text-center cursor-pointer ${selected === 'Sign Up' ? 'bg-[#7A4DC4]' : 'hover:bg-secondary'}`}
+                            className={`flex-1 py-2 pr-[5%] text-center cursor-pointer ${selected === 'Sign Up' ? 'bg-[#7A4DC4]' : 'hover:bg-secondary'}`}
                             onClick={() => setSelected('Sign Up')}
                         >
                             Sign Up
