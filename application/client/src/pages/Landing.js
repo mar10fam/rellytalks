@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SignInForm from '../components/SignInForm';
 
 const Landing = () => {
     const [selected, setSelected] = useState('Sign In');
@@ -26,7 +27,7 @@ const Landing = () => {
                 </div>
                 <div className="flex-1 mt-4">
                     {selected === 'Sign In' ? (
-                        <div> {/* Sign In form goes here */}Sign In </div>
+                        <div> <SignInForm />  </div>
                     ) : (
                         <div> {/* Sign Up form goes here */}Sign Up </div>
                     )}
