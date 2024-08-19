@@ -1,12 +1,14 @@
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { TermsOfService, PrivacyPolicy } from './TosAndPP';
 import { useState } from 'react';
 
 const SignUpForm = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPw, setConfirmPw] = useState('');
@@ -44,16 +46,16 @@ const SignUpForm = () => {
     }
     return (
         <>
-        <div id="signupform" className="h-[60vh] p-4 overflow-y-auto overflow-x-hidden w-[90%] flex flex-col space-y-3 m-auto mt-6">
+        <div id="signupform" className="h-[60vh] p-2 overflow-y-auto overflow-x-hidden w-[90%] flex flex-col space-y-3 m-auto mt-6">
             <div className="flex gap-1">
-                <label className="input input-bordered input-primary flex flex-1 items-center gap-2 w-[48%]">
+                <label className="input input-bordered input-primary flex flex-1 items-center gap-2 w-[48%] overflow-hidden">
                     <PersonOutlineOutlinedIcon />
                     <input type="text" className="grow" placeholder="First Name" 
                     onChange={(e) => {
                         setFirstName(e.target.value);
                     }}/>
                 </label>
-                <label className="input input-bordered input-primary flex flex-1 items-center gap-2 w-[48%]">
+                <label className="input input-bordered input-primary flex flex-1 items-center gap-2 w-[48%] overflow-hidden">
                     <PersonOutlineOutlinedIcon />
                     <input type="text" className="grow" placeholder="Last Name" 
                     onChange={(e) => {
@@ -71,8 +73,15 @@ const SignUpForm = () => {
             </label>
             {!emailValid && <div className="label-text text-red-600 mt-2">Please enter a valid email address in the format <span style={{fontWeight: 'bold'}}>example@mail.com</span></div>}
             <label className="input input-bordered input-primary flex items-center gap-2 flex-shrink-0">
+                <AccountCircleOutlinedIcon />
+                <input type="text" className="grow" placeholder="Username" 
+                onChange={(e) => {
+                    setUsername(e.target.value);
+                }}/>
+            </label>
+            <label className="input input-bordered input-primary flex items-center gap-2 flex-shrink-0">
                 <LockOutlinedIcon />
-                <input type="text" className="grow" placeholder="Password" 
+                <input type="password" className="grow" placeholder="Password" 
                 onChange={(e) => {
                     validatePassword1(e.target.value);
                     validatePassword2(e.target.value);
@@ -83,7 +92,7 @@ const SignUpForm = () => {
             {!passwordValid2 && <div className="label-text text-red-600 mt-2">Password must contain at least one letter and one number</div>}
             <label className="input input-bordered input-primary flex items-center gap-2 flex-shrink-0">
                 <LockOutlinedIcon />
-                <input type="text" className="grow" placeholder="Confirm Password" 
+                <input type="password" className="grow" placeholder="Confirm Password" 
                 onChange={(e) => {
                     validateConfirmPw(e.target.value);
                     setConfirmPw(e.target.value);

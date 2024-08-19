@@ -3,7 +3,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const SignInForm = () => {
     return (
-        <div id="signinform" className="h-[60vh] w-[90%] flex flex-col space-y-4 m-auto mt-6">
+        <div id="signinform" className="h-[60vh] w-[90%] p-2 flex flex-col space-y-4 m-auto mt-6">
+            <div className="text-center text-xl font-bold mb-2">Welcome to RellyTalks, let's get signed in!</div>
             <label className="input input-bordered input-primary flex items-center gap-2">
                 <EmailOutlinedIcon />
                 <input type="text" className="grow" placeholder="Email" />
