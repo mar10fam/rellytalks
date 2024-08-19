@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import SignInForm from '../components/SignInForm';
+import SignUpForm from '../components/SignUpForm';
 
 const Landing = () => {
     const [selected, setSelected] = useState('Sign In');
 
     return (
         <div className="flex items-center justify-center h-screen">
-            <div className="bg-white w-[30vw] h-[80vh] shadow-2xl rounded-lg flex flex-col p-[20px]">
+            <div className="bg-white w-[35vw] h-[80vh] shadow-2xl rounded-lg flex flex-col p-[20px]">
                 {/* Navbar to switch from sign in and sign up */}
                 <div className="flex justify-center mt-4">
                     <div className="relative w-[70%] bg-neutral text-white flex rounded-full overflow-hidden">
@@ -27,9 +28,9 @@ const Landing = () => {
                 </div>
                 <div className="flex-1 mt-4">
                     {selected === 'Sign In' ? (
-                        <div> <SignInForm />  </div>
+                        <div> <SignInForm /> </div>
                     ) : (
-                        <div> {/* Sign Up form goes here */}Sign Up </div>
+                        <div> <SignUpForm /> </div>
                     )}
                 </div>
             </div>
