@@ -23,25 +23,25 @@ const users = [
         <>
         <Navbar />
         <div className="flex items-center justify-center">
-            <div id="messages-container" className="flex w-[80vw] h-[80vh] mt-[5vh] bg-white rounded-lg overflow-hidden shadow-2xl">
-                <div id="messages-list" className="w-[30%] flex flex-col overflow-hidden overflow-y-auto">
+            <div id="messages-container" className="flex w-[80vw] h-[80vh] mt-[5vh] bg-accent rounded-lg overflow-hidden shadow-2xl">
+                <div id="messages-list" className="w-[30%] flex flex-col border-r border-r-neutral overflow-hidden overflow-y-auto">
                     {users.map((user, index) => {
                         return (
-                            <div key={index} className="flex p-3 ring-1 ring-[#c8c8c8]">
+                            <div key={index} className="flex p-3 bg-white ring-1 ring-neutral hover:ring-inset hover:ring-2">
                                 <img
                                     src={user.pfp}
                                     alt={`${user.username} profile`}
-                                    className="w-14 h-14 rounded-full mr-6"
+                                    className="w-14 h-14 rounded-full"
                                 />
-                                <div className="flex flex-col w-[80%] m-auto">
+                                <div className="flex flex-col w-[70%] m-auto">
                                     <div className="font-bold">{user.username}</div>
-                                    <div className="truncate">{user.lastMsg}</div>
+                                    <div className="truncate text-gray-500">{user.lastMsg}</div>
                                 </div>
                             </div>
                         )
                     })}
                 </div>
-                <div id="chatroom" className="w-[80%] bg-primary">
+                <div id="chatroom" className="w-[80%] bg-white">
 
                 </div>
             </div>
