@@ -72,7 +72,10 @@ const Home = () => {
                                     <span className="font-bold">{user.username}</span>
                                     <span className="pr-12">{user.description}</span>
                                 </div>
-                                <ChatBubbleOutlineOutlinedIcon className="absolute inset-y-0 right-2 flex m-auto mr-2 cursor-pointer" />
+                                <ChatBubbleOutlineOutlinedIcon 
+                                    className="absolute inset-y-0 right-4 flex m-auto mr-2 cursor-pointer" 
+                                    
+                                />
                             </div>  
                         )
                     })}
