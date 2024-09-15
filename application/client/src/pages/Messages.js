@@ -1,4 +1,7 @@
 import Navbar from "../components/Navbar";
+import Message from "../components/Message";
+import SendIcon from '@mui/icons-material/Send';
+import { Send } from "@mui/icons-material";
 
 const Messages = () => {
 const users = [
@@ -63,11 +66,15 @@ const users = [
                         </div>
                     </div> 
                     <div id="chat-box" className="flex flex-col h-[85%]">
-                        <div id="chat-messages" className="h-[90%] overflow-y-auto">
-
+                        <div id="chat-messages" className="h-[90%] overflow-y-auto p-[10px]">
+                            <Message />
+                            <Message own={true}/>
+                            <Message />
+                            <Message />
                         </div>
-                        <div id="send-chat" className="h-[10%] flex items-center bg-white pl-2 pr-2">
-                            <input type="text" placeholder="Message..." className="p-2 h-[60%] border border-primary focus:outline-none rounded-full w-full" />
+                        <div id="send-chat" className="h-[10%] flex items-center bg-white pl-2 pr-2 relative">
+                            <input type="text" placeholder="Message..." className="p-2 h-[60%] border border-primary focus:outline-none rounded-full w-full pr-[50px]" />
+                            <SendIcon className="absolute right-[20px] text-primary hover:cursor-pointer hover:text-secondary hover:scale-[1.1]" />
                         </div>
                     </div>
                 </div>

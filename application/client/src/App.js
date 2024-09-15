@@ -1,8 +1,11 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import io from 'socket.io-client';
 import Landing from './pages/Landing';
 import Home from './pages/Home';
 import Messages from './pages/Messages';
+
+const socket = io.connect("http://localhost:3001");
 
 function App() {
   return (
