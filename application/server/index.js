@@ -1,28 +1,34 @@
 const express = require("express");
 const app = express();
-const http = require("http");
-const cors = require("cors");
-const { Server } = require("socket.io");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const userRoute = require("./routes/users");
+const authRoute = require("./routes/auth");
 
-app.use(cors());
+dotenv.config();
 
-const server = http.createServer(app);
-
-const io = new Server(server, {
-    cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"]
+// setup database connection
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URL);
+        console.log("Connected to DB");
+    } catch(err) {
+        console.error("Error connecting to MongoDB: ", err.message);
     }
-});
+}
 
-io.on("connection", (socket) => {
-    console.log(`User Connected: ID = ${socket.id}`);
+connectDB();
 
-    socket.on("disconnect", () => {
-        console.log("User Disconnected", socket.id);
-    }); 
-});
+// middleware
+app.use(express.json());
+app.use(helmet());
+app.use(morgan("common"));
 
-server.listen(3001, () => {
-    console.log("SERVER RUNNING");
-});
+app.use("/users", userRoute);
+app.use("/auth", authRoute);
+
+app.listen(3001, () => {
+    console.log("Server running!");
+})

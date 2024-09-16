@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar";
 import Message from "../components/Message";
 import SendIcon from '@mui/icons-material/Send';
-import { Send } from "@mui/icons-material";
+import ConvoHeader from "../components/ConvoHeader";
 
 const Messages = () => {
 const users = [
@@ -54,17 +54,7 @@ const users = [
                     })}
                 </div>
                 <div id="chatroom" className="flex flex-col w-[80%] bg-white">
-                    <div id="user-info" className="flex bg-accent h-[15%] border-b border-b-black p-2">
-                        <img
-                            src={users[0].pfp}
-                            alt={`${users[0].username} profile`}
-                            className="w-18 h-18 mr-6 border-4 border-neutral border-black rounded-full"
-                        />
-                        <div className="flex flex-col justify-center">
-                            <div className="font-bold">{users[0].name}</div>
-                            <div className="">@{users[0].username}</div>
-                        </div>
-                    </div> 
+                    <ConvoHeader />
                     <div id="chat-box" className="flex flex-col h-[85%]">
                         <div id="chat-messages" className="h-[90%] overflow-y-auto p-[10px]">
                             <Message />
