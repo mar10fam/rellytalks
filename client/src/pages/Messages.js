@@ -2,31 +2,35 @@ import Navbar from "../components/Navbar";
 import Message from "../components/Message";
 import SendIcon from '@mui/icons-material/Send';
 import ConvoHeader from "../components/ConvoHeader";
+import UserContext from "../context/AuthContext";
+import { useContext } from "react";
 
 const Messages = () => {
-const users = [
-    {
-        name: "User One",
-        username: "user1",
-        lastMsg: "This is the last message before the convo ended",
-        pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-        timeStamp: "12:00AM"
-    },
-    {
-        name: "User Two",
-        username: "user2",
-        pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-        lastMsg: "The beach is a cold park with a cheese barrel tumbling over the moon with rubber sticks.",
-        timeStamp: "12:00AM"
-    },
-    {
-        name: "User Three",
-        username: "user3",
-        pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-        lastMsg: "Why don't you come down to the old drown town and make a loaf of bread over the horizon at the uptown showdown",
-        timeStamp: "12:00AM"
-    }
-]
+    const users = [
+        {
+            name: "User One",
+            username: "user1",
+            lastMsg: "This is the last message before the convo ended",
+            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+            timeStamp: "12:00AM"
+        },
+        {
+            name: "User Two",
+            username: "user2",
+            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+            lastMsg: "The beach is a cold park with a cheese barrel tumbling over the moon with rubber sticks.",
+            timeStamp: "12:00AM"
+        },
+        {
+            name: "User Three",
+            username: "user3",
+            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+            lastMsg: "Why don't you come down to the old drown town and make a loaf of bread over the horizon at the uptown showdown",
+            timeStamp: "12:00AM"
+        }
+    ]
+
+    const { user } = useContext(UserContext);
 
     return (
         <>

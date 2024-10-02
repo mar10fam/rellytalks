@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import SignInForm from '../components/SignInForm';
 import SignUpForm from '../components/SignUpForm';
+import UserContext from '../context/AuthContext';
+import { useNavigate} from 'react-router-dom';
 
 const Landing = () => {
     const [selected, setSelected] = useState('Sign In');
+
+    const { user } = useContext(UserContext);
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+        if(user) navigate("/home");
+    })
 
     return (
         <div className="flex items-center justify-center h-screen">
