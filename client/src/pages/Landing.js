@@ -12,7 +12,7 @@ const Landing = () => {
     
     useEffect(() => {
         if(user) navigate("/home");
-    })
+    });
 
     return (
         <div className="flex items-center justify-center h-screen">

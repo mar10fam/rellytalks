@@ -36,7 +36,7 @@ const SignInForm = () => {
         }).catch((err) => {
             console.error("Login failed: ", err);
             setLoginValid(false);
-        }) 
+        }); 
     }
 
     return (

@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
-import UserContext from './context/AuthContext';
+import { UserProvider } from './context/AuthContext';
 import Landing from './pages/Landing';
 import Home from './pages/Home';
 import Messages from './pages/Messages';
@@ -10,7 +10,7 @@ function App() {
   const [user, setUser] = useState(null);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserProvider>
       <div className="App">
         <div className="background" />
         <div className="content">
@@ -23,7 +23,7 @@ function App() {
           </Router>
         </div>
       </div>
-    </UserContext.Provider>
+    </UserProvider>
   );
 }
 
