@@ -1,8 +1,13 @@
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import Navbar from "../components/Navbar";
+import { useContext, useEffect } from 'react';
+import UserContext from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+    const { user } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const users = [
         {
@@ -36,6 +41,10 @@ const Home = () => {
             description: "I like watching ufc and I have 3 volleyballs. Words in books are sometimes long like the sun. I have no biology, join me in the grass on the moon."
         }
     ]
+
+    useEffect(() => {
+        if(!user) navigate("/");
+    });
 
     const onSearch = (searchQuery) => {
         console.log("Searching!: ", searchQuery);

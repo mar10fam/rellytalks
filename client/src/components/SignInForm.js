@@ -3,7 +3,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import UserContext from '../context/AuthContext';
 import { useContext } from 'react';
 import { useState } from 'react';
-import { login } from '../api.js';
+import { login } from '../api/auth.js';
 import { useNavigate } from 'react-router-dom';
 
 const SignInForm = () => {

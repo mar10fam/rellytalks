@@ -1,7 +1,8 @@
 import { createContext, useState, useEffect } from 'react';
-import { checkAuth } from '../api';
+import { checkAuth } from '../api/auth.js';
 
 const UserContext = createContext();
+
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
@@ -9,8 +10,9 @@ export const UserProvider = ({ children }) => {
     useEffect(() => {
         checkAuth().then((data) => {
             if(data) setUser(data);
+            else setUser(null);
         });
-    }, []);
+    });
 
     return (
         <UserContext.Provider value={{ user, setUser }}>

@@ -3,34 +3,20 @@ import Message from "../components/Message";
 import SendIcon from '@mui/icons-material/Send';
 import ConvoHeader from "../components/ConvoHeader";
 import UserContext from "../context/AuthContext";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
+import { getConversations } from "../api/conversation";
 
 const Messages = () => {
-    const users = [
-        {
-            name: "User One",
-            username: "user1",
-            lastMsg: "This is the last message before the convo ended",
-            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-            timeStamp: "12:00AM"
-        },
-        {
-            name: "User Two",
-            username: "user2",
-            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-            lastMsg: "The beach is a cold park with a cheese barrel tumbling over the moon with rubber sticks.",
-            timeStamp: "12:00AM"
-        },
-        {
-            name: "User Three",
-            username: "user3",
-            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-            lastMsg: "Why don't you come down to the old drown town and make a loaf of bread over the horizon at the uptown showdown",
-            timeStamp: "12:00AM"
-        }
-    ]
-
+    const [conversations, setConversations] = useState([]);
     const { user } = useContext(UserContext);
+
+    useEffect(() => {
+        getConversations(user._id).then((res) => {
+            setConversations(res.data);
+        }).catch((err) => {
+            console.error("Error attempting to get conversations: ", err);
+        });
+    }, [user._id]);
 
     return (
         <>
@@ -38,7 +24,7 @@ const Messages = () => {
         <div className="flex items-center justify-center">
             <div id="messages-container" className="flex w-[80vw] h-[80vh] mt-[5vh] bg-accent rounded-lg overflow-hidden shadow-2xl">
                 <div id="messages-list" className="w-[30%] flex flex-col border-r border-r-black overflow-hidden overflow-y-auto">
-                    {users.map((user, index) => {
+                    {/*users.map((user, index) => {
                         return (
                             <div key={index} className="flex p-2 bg-white ring-1 ring-neutral hover:ring-inset hover:ring-2 hover:cursor-pointer">
                                 <img
@@ -55,7 +41,7 @@ const Messages = () => {
                                 </div>
                             </div>
                         )
-                    })}
+                    }) */} 
                 </div>
                 <div id="chatroom" className="flex flex-col w-[80%] bg-white">
                     <ConvoHeader />
@@ -75,7 +61,6 @@ const Messages = () => {
             </div>
         </div>
         </>
-
     )
 }
 

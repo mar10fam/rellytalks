@@ -3,7 +3,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { TermsOfService, PrivacyPolicy } from './TosAndPP';
 import { useState, useContext } from 'react';
-import { register } from '../api';
+import { register } from '../api/auth.js';
 import UserContext from '../context/AuthContext';
 
 const SignUpForm = () => {
@@ -73,7 +73,6 @@ const SignUpForm = () => {
             console.log("Successfully registered: ", res.data);
             setUser(res.data);
         }).catch((errorMessage) => {
-            console.error("Register ERROR FROM CLIENT: ", errorMessage);
             const error = errorMessage.trim();
             if(error === "Both username and email are taken") {
                 setUsernameTaken(true);

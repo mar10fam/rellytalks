@@ -96,7 +96,7 @@ router.post("/logout", (req, res) => {
         secure: true,
         sameSite: 'Strict'
     });
-    res.status(200).send("Logged out");
+    return res.status(200).send("Logged out");
 });
 
 module.exports = router
