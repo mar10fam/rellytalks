@@ -1,9 +1,4 @@
-import axios from 'axios';
-
-const instance = axios.create({
-    baseURL: process.env.REACT_APP_API_BASE,
-    withCredentials: true // ensure cookies get sent with requests 
-});
+import instance from "./api";
 
 // attempts to login user 
 export const login = async (body) => {
@@ -38,6 +33,7 @@ export const checkAuth = async () => {
 }
 
 // logs out the user 
-export const logout = () => {
-    return instance.post("/auth/logout");
+export const logout = async () => {
+    const res = await instance.post("/auth/logout");
+    return res;
 }

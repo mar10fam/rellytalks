@@ -80,7 +80,7 @@ router.post("/login", async (req, res) => {
 router.get("/check", (req, res) => {
     const token = req.cookies.token;
     if(!token) return res.status(401).json("Not authenticated");
-
+    
     try {
         const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
         return res.status(200).json(verified);

@@ -9,7 +9,7 @@ const Navbar = () => {
   const currentPath = location.pathname;
   const navigate = useNavigate();
 
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const [profilePanel, setProfilePanel] = useState(false);
   
@@ -24,6 +24,7 @@ const Navbar = () => {
   const logoutHandler = () => {
     logout().then((res) => {
       console.log(res);
+      setUser(null);
       navigate("/");
     }).catch((err) => {
       console.error("Error while trying to logout: ", err);
