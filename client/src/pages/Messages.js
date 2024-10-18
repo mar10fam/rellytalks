@@ -5,7 +5,7 @@ import ConvoHeader from "../components/ConvoHeader";
 import UserContext from "../context/AuthContext";
 import { useContext, useState, useEffect } from "react";
 import { getConversations } from "../api/conversation";
-import { getMessages } from "../api/message";
+import { getMessages, sendText } from "../api/message";
 import { useNavigate } from "react-router-dom";
 import Conversation from "../components/Conversation";
 
@@ -27,7 +27,6 @@ const Messages = () => {
 
         getConversations(user._id).then((res) => {
             setConversations(res.data);
-            console.log("Conversations: ", res.data);
         }).catch((err) => {
             console.error("Error attempting to get conversations: ", err);
         });
@@ -35,12 +34,28 @@ const Messages = () => {
 
     useEffect(() => {
         getMessages(currentChat?._id).then((res) => {
-            console.log("Messages: ", res);
             setMessages(res);
         }).catch((err) => {
             console.error("Error getting messages for current chat: ", err);
         })
     }, [currentChat]);
+
+    const handleSendText = (e) => {
+        e.preventDefault();
+
+        const message = {
+            conversationId: currentChat._id,
+            senderId: user._id,
+            text: newMessage
+        }
+        
+        sendText(message).then((text) => {
+            setMessages((prevMessages) => [...prevMessages, text]);
+            setNewMessage("");
+        }).catch((err) => {
+            console.error("Error while trying to send text: ", err);
+        })
+    }
 
     return (
         <>
@@ -76,8 +91,12 @@ const Messages = () => {
                                 placeholder="Message..." 
                                 className="p-2 h-[60%] border border-primary focus:outline-none rounded-full w-full pr-[50px]"
                                 onChange={(e) => setNewMessage(e.target.value)}
+                                value={newMessage}
                             />
-                            <SendIcon className="absolute right-[20px] text-primary hover:cursor-pointer hover:text-secondary hover:scale-[1.1]" />
+                            <SendIcon 
+                                className="absolute right-[20px] text-primary hover:cursor-pointer hover:text-secondary hover:scale-[1.1]" 
+                                onClick={handleSendText}
+                            />
                         </div>
                     </div>
                 </div>

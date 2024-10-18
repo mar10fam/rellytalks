@@ -9,3 +9,13 @@ export const getMessages = async (convoId) => {
         throw err;
     }
 }
+
+// send text to the current chat 
+export const sendText = async (message) => {
+    try {
+        const res = await instance.post("/message", message);
+        return res.data
+    } catch(err) {
+        throw err;
+    }
+}
