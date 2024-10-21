@@ -3,7 +3,7 @@ import Message from "../components/Message";
 import SendIcon from '@mui/icons-material/Send';
 import ConvoHeader from "../components/ConvoHeader";
 import UserContext from "../context/AuthContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { getConversations } from "../api/conversation";
 import { getMessages, sendText } from "../api/message";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,8 @@ const Messages = () => {
 
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
+
+    const scrollRef = useRef(null);
 
     useEffect(() => {
         if(!user) { 
@@ -40,6 +42,10 @@ const Messages = () => {
         })
     }, [currentChat]);
 
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
     const handleSendText = (e) => {
         e.preventDefault();
 
@@ -54,7 +60,7 @@ const Messages = () => {
             setNewMessage("");
         }).catch((err) => {
             console.error("Error while trying to send text: ", err);
-        })
+        });
     }
 
     return (
@@ -82,7 +88,7 @@ const Messages = () => {
                     <div id="chat-box" className="flex flex-col h-[85%]">
                         <div id="chat-messages" className="h-[90%] overflow-y-auto p-[10px]">
                             {messages.map((message) => {
-                                return <Message key={message._id} message={message} own={message.senderId === user._id} />
+                                return <div ref={scrollRef} key={message._id}><Message message={message} own={message.senderId === user._id} /></div>
                             })}
                         </div>
                         <div id="send-chat" className="h-[10%] flex items-center bg-white pl-2 pr-2 relative">
