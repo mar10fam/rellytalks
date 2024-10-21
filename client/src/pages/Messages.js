@@ -8,12 +8,15 @@ import { getConversations } from "../api/conversation";
 import { getMessages, sendText } from "../api/message";
 import { useNavigate } from "react-router-dom";
 import Conversation from "../components/Conversation";
+import { io } from "socket.io-client";
 
 const Messages = () => {
     const [conversations, setConversations] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
+    
+    const socket = useRef(null);
 
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
@@ -21,11 +24,21 @@ const Messages = () => {
     const scrollRef = useRef(null);
 
     useEffect(() => {
+        socket.current = io("ws://localhost:3002");
+    }, []);
+
+    useEffect(() => {
+        socket.current.emit("addUser", user?._id);
+        socket.current.on("getUsers", (users) => {
+            console.log("Socket users: ", users);
+        });
+    }, [user])
+
+    useEffect(() => {
         if(!user) { 
             navigate("/");
             return;
         }
-        console.log("User: ", user);
 
         getConversations(user._id).then((res) => {
             setConversations(res.data);
@@ -63,6 +76,10 @@ const Messages = () => {
         });
     }
 
+    const handleKeyDown = (e) => {
+        if(e.key === "Enter") handleSendText(e);
+    }
+
     return (
         <>
         <Navbar />
@@ -72,8 +89,8 @@ const Messages = () => {
                     {(conversations && conversations.length > 0) ? (
                         conversations.map((convo) => {
                             return (
-                               <div onClick={() => setCurrentChat(convo)}>
-                                    <Conversation key={convo._id} conversation={convo} />
+                               <div key={convo._id} onClick={() => setCurrentChat(convo)}>
+                                    <Conversation conversation={convo} />
                                 </div> 
                             )
                         })
@@ -97,6 +114,7 @@ const Messages = () => {
                                 placeholder="Message..." 
                                 className="p-2 h-[60%] border border-primary focus:outline-none rounded-full w-full pr-[50px]"
                                 onChange={(e) => setNewMessage(e.target.value)}
+                                onKeyDown={handleKeyDown}
                                 value={newMessage}
                             />
                             <SendIcon 

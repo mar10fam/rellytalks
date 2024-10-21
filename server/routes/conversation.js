@@ -17,7 +17,6 @@ router.post("/", async (req, res) => {
 
 // get all convos of a user 
 router.get("/:userId", async (req, res) => {
-    console.log("User ID from req: ", req.params.userId);
     try {
         const conversations = await Conversation.find({
             members: { $in: [req.params.userId]}
