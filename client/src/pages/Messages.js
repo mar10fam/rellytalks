@@ -14,6 +14,7 @@ const Messages = () => {
     const [conversations, setConversations] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
     const [messages, setMessages] = useState([]);
+    const [arrivalMessage, setArrivalMessage] = useState(null);
     const [newMessage, setNewMessage] = useState("");
     
     const socket = useRef(null);
@@ -25,7 +26,20 @@ const Messages = () => {
 
     useEffect(() => {
         socket.current = io("ws://localhost:3002");
+        socket.current.on("getMessage", (data) => {
+            setArrivalMessage({
+                sender: data.senderId, 
+                text: data.text,
+                createdAt: Date.now()
+            })
+        })
     }, []);
+
+    useEffect(() => {
+        // check that the sender of the chat actually belongs to one of the members in current chat
+        arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
+        setMessages((prev) => [...prev, arrivalMessage]);
+    }, [arrivalMessage, currentChat])
 
     useEffect(() => {
         socket.current.emit("addUser", user?._id);
@@ -67,7 +81,14 @@ const Messages = () => {
             senderId: user._id,
             text: newMessage
         }
-        
+
+        const receiverId = currentChat.members.find((member) => member !== user._id)
+        socket.current.emit("sendMessage", {
+            senderId: user._id,
+            receiverId: receiverId,
+            text: newMessage
+        })
+
         sendText(message).then((text) => {
             setMessages((prevMessages) => [...prevMessages, text]);
             setNewMessage("");
