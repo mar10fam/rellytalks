@@ -23,7 +23,6 @@ const Navbar = () => {
 
   const logoutHandler = () => {
     logout().then((res) => {
-      console.log(res);
       setUser(null);
       navigate("/");
     }).catch((err) => {

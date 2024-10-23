@@ -25,8 +25,6 @@ const findUser = (receiverId) => {
 io.on("connection", (socket) => {
     socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
-        io.emit("getUsers", users);
-        console.log("added user to users: ", users);
     });
 
     socket.on("sendMessage", (body) => {
@@ -35,6 +33,8 @@ io.on("connection", (socket) => {
         const text = body.text;
         
         const receiver = findUser(receiverId);
+        if(!receiver) return;
+
         io.to(receiver.socketId).emit("getMessage", {
             senderId, 
             text

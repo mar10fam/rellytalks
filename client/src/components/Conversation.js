@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react"
 import { getUser } from "../api/user";
 
-const Conversation = ({conversation}) => {
+const Conversation = ({ conversation, userId }) => {
     const [user, setUser] = useState({});
 
     useEffect(() => {
-        const friendId = conversation.members[1]
-        getUser(friendId).then((res) => {
-            setUser(res);
+        const friendId = conversation.members.filter((member) => member !== userId);
+        getUser(friendId).then((user) => {
+            setUser(user);
         }).catch((err) => {
             console.error("Failed to get user: ", err);
-        })
-    }, [conversation]);
+        });
+    }, [conversation, userId]);
 
     return (
         <div className="flex p-2 bg-white ring-1 ring-neutral hover:ring-inset hover:ring-2 hover:cursor-pointer">

@@ -70,7 +70,6 @@ const SignUpForm = () => {
         }
 
         register(body).then((res) => {
-            console.log("Successfully registered: ", res.data);
             setUser(res.data);
         }).catch((errorMessage) => {
             const error = errorMessage.trim();

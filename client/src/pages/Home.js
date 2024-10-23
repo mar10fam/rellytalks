@@ -1,50 +1,25 @@
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import Navbar from "../components/Navbar";
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserContext from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { getAllUsers } from '../api/user';
 
 const Home = () => {
+    const [users, setUsers] = useState([]);
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
 
-    const users = [
-        {
-            username: "John Doe",
-            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-            description: "This is an example of a description. I love reading and hiking."
-        },
-        {
-            username: "Ana Lee",
-            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-            description: "This is another example of a description. I like going to the beach and campfires"
-        },
-        {
-            username: "Mar Ten",
-            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-            description: "I like watching ufc and I have 3 volleyballs. Words in books are sometimes long like the sun. I have no biology, join me in the grass on the moon."
-        },
-        {
-            username: "John Doe",
-            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-            description: "This is an example of a description. I love reading and hiking."
-        },
-        {
-            username: "Ana Lee",
-            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-            description: "This is another example of a description. I like going to the beach and campfires"
-        },
-        {
-            username: "Mar Ten",
-            pfp: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
-            description: "I like watching ufc and I have 3 volleyballs. Words in books are sometimes long like the sun. I have no biology, join me in the grass on the moon."
-        }
-    ]
-
     useEffect(() => {
         if(!user) navigate("/");
-    });
+
+        getAllUsers().then((users) => {
+            setUsers(users);
+        }).catch((err) => {
+            console.error("Caught error while trying to get all users: ", err);
+        })
+    }, [user, navigate]);
 
     const onSearch = (searchQuery) => {
         console.log("Searching!: ", searchQuery);
@@ -83,7 +58,7 @@ const Home = () => {
                                 </div>
                                 <ChatBubbleOutlineOutlinedIcon 
                                     className="absolute inset-y-0 right-4 flex m-auto mr-2 cursor-pointer" 
-                                    
+
                                 />
                             </div>  
                         )

@@ -43,9 +43,6 @@ const Messages = () => {
 
     useEffect(() => {
         socket.current.emit("addUser", user?._id);
-        socket.current.on("getUsers", (users) => {
-            console.log("Socket users: ", users);
-        });
     }, [user])
 
     useEffect(() => {
@@ -55,7 +52,8 @@ const Messages = () => {
         }
 
         getConversations(user._id).then((res) => {
-            setConversations(res.data);
+            setConversations(res);
+            if(res.length > 0) setCurrentChat(res[0]);
         }).catch((err) => {
             console.error("Error attempting to get conversations: ", err);
         });
@@ -88,10 +86,13 @@ const Messages = () => {
             receiverId: receiverId,
             text: newMessage
         })
-
         sendText(message).then((text) => {
             setMessages((prevMessages) => [...prevMessages, text]);
             setNewMessage("");
+        }).then(() => {
+            getConversations(user._id).then((res) => {
+                setConversations(res);
+            });
         }).catch((err) => {
             console.error("Error while trying to send text: ", err);
         });
@@ -99,6 +100,10 @@ const Messages = () => {
 
     const handleKeyDown = (e) => {
         if(e.key === "Enter") handleSendText(e);
+    }
+
+    const sendHome = () => {
+        navigate("/home");
     }
 
     return (
@@ -111,38 +116,47 @@ const Messages = () => {
                         conversations.map((convo) => {
                             return (
                                <div key={convo._id} onClick={() => setCurrentChat(convo)}>
-                                    <Conversation conversation={convo} />
+                                    <Conversation conversation={convo} userId={user._id} />
                                 </div> 
                             )
                         })
                     ) : (
-                        <div className="flex justify-center opacity-90">
-                            Find users to message
+                        <div className="flex justify-center opacity-90 mt-4 p-2 text-center">
+                            No conversations
                         </div>
                     )}
                 </div>
                 <div id="chatroom" className="flex flex-col w-[80%] bg-white">
-                    <ConvoHeader />
+                    <ConvoHeader currentChat={currentChat} userId={user._id} />
                     <div id="chat-box" className="flex flex-col h-[85%]">
-                        <div id="chat-messages" className="h-[90%] overflow-y-auto p-[10px]">
-                            {messages.map((message) => {
-                                return <div ref={scrollRef} key={message._id}><Message message={message} own={message.senderId === user._id} /></div>
-                            })}
+                        {currentChat ? <>
+                            <div id="chat-messages" className="h-[90%] overflow-y-auto p-[10px]">
+                                {messages.map((message) => {
+                                    return <div ref={scrollRef} key={message._id}><Message message={message} own={message.senderId === user._id} /></div>
+                                })}
+                            </div>
+                            <div id="send-chat" className="h-[10%] flex items-center bg-white pl-2 pr-2 relative">
+                                <input 
+                                    type="text" 
+                                    placeholder="Message..." 
+                                    className="p-2 h-[60%] border border-primary focus:outline-none rounded-full w-full pr-[50px]"
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                    value={newMessage}
+                                />
+                                <SendIcon 
+                                    className="absolute right-[20px] text-primary hover:cursor-pointer hover:text-secondary hover:scale-[1.1]" 
+                                    onClick={handleSendText}
+                                />
+                            </div>
+                        </> :
+                        <div className="text-lg p-10 text-center opacity-90">
+                            Looks like you haven't started any conversations yet. 
+                            You can find people to start a conversation with in the <span 
+                            onClick={sendHome} 
+                            className="cursor-pointer underline text-primary hover:text-secondary">home page!</span>
                         </div>
-                        <div id="send-chat" className="h-[10%] flex items-center bg-white pl-2 pr-2 relative">
-                            <input 
-                                type="text" 
-                                placeholder="Message..." 
-                                className="p-2 h-[60%] border border-primary focus:outline-none rounded-full w-full pr-[50px]"
-                                onChange={(e) => setNewMessage(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                                value={newMessage}
-                            />
-                            <SendIcon 
-                                className="absolute right-[20px] text-primary hover:cursor-pointer hover:text-secondary hover:scale-[1.1]" 
-                                onClick={handleSendText}
-                            />
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
