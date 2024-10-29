@@ -19,3 +19,13 @@ export const getAllUsers = async () => {
         throw err;
     }
 }
+
+// update the pfp of a user
+export const editPfp = async (body) => {
+    try {
+        const res = await instance.put(`/users/${body.userId}/pfp`, body);
+        return res.data.updatedUser;
+    } catch(err) {
+        throw err;
+    }
+}

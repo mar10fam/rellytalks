@@ -9,8 +9,8 @@ router.post("/", async (req, res) => {
     try {
         const savedMessage = await newMessage.save();
         
-        await Conversation.updateOne(
-            { _id: req.body.conversationId }, 
+        await Conversation.findByIdAndUpdate(
+            req.body.conversationId, 
             { $set: { updatedAt: Date.now() } } 
         );
 

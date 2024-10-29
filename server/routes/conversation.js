@@ -3,6 +3,13 @@ const router = require("express").Router();
 
 // new convo
 router.post("/", async (req, res) => {
+    // check if the conversation exists already 
+    const existingConversation = await Conversation.findOne({
+        members: { $all: [req.body.senderId, req.body.receiverId]}
+    });
+
+    if(existingConversation) return res.status(204).json(existingConversation);
+
     const newConversation = new Conversation({
         members: [req.body.senderId, req.body.receiverId]
     })

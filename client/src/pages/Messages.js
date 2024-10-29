@@ -6,13 +6,15 @@ import UserContext from "../context/AuthContext";
 import { useContext, useState, useEffect, useRef } from "react";
 import { getConversations } from "../api/conversation";
 import { getMessages, sendText } from "../api/message";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Conversation from "../components/Conversation";
 import { io } from "socket.io-client";
 
 const Messages = () => {
+    const location = useLocation();
+
     const [conversations, setConversations] = useState([]);
-    const [currentChat, setCurrentChat] = useState(null);
+    const [currentChat, setCurrentChat] = useState(location.state?.currentChat || null);
     const [messages, setMessages] = useState([]);
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const [newMessage, setNewMessage] = useState("");
@@ -60,12 +62,17 @@ const Messages = () => {
     }, [user, navigate]);
 
     useEffect(() => {
+        // use the conversation id in currentChat to get all the messages 
         getMessages(currentChat?._id).then((res) => {
             setMessages(res);
         }).catch((err) => {
             console.error("Error getting messages for current chat: ", err);
         })
-    }, [currentChat]);
+
+        // check if the person in currentChat is active 
+        const friendId = currentChat.members.filter((member) => member !== user.userId); // get the id of friend
+        socket.current.emit("checkActive", friendId);
+    }, [currentChat, user.userId]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });

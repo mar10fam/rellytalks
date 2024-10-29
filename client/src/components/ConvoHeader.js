@@ -15,13 +15,15 @@ const ConvoHeader = ({ currentChat, userId }) => {
         })
     }, [currentChat, userId])
 
+    if(!currentChat) return;
+
     return (
         <div id="user-info" className="flex items-center bg-accent h-[15%] border-b border-b-black p-2">
             <div id="pfpContainer" className="h-16 w-16 relative mr-6">
                 <img
                     src={user.pfp}
                     alt={`${user.username} profile`}
-                    className="border-2 border-neutral rounded-full"
+                    className="w-16 h-16 border-2 border-neutral object-cover object-center rounded-full"
                 /> 
                 <div id="onlineBadge" className="absolute w-[10px] h-[10px] rounded-full bg-[#32CD32] right-[4px] top-[4px]" />
             </div>

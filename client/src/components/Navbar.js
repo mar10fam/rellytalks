@@ -3,6 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import UserContext from '../context/AuthContext';
 import { logout } from '../api/auth';
+import { storage } from '../firebase';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { nanoid } from "nanoid";
+import { editPfp } from '../api/user';
 
 const Navbar = () => {
   const location = useLocation();
@@ -22,11 +26,42 @@ const Navbar = () => {
   }
 
   const logoutHandler = () => {
-    logout().then((res) => {
+    logout().then(() => {
       setUser(null);
       navigate("/");
     }).catch((err) => {
       console.error("Error while trying to logout: ", err);
+    });
+  }
+  
+  const handleFileUpload = (e) => {
+    const pfp = e.target.files[0];
+    if(!pfp) return;
+    const imageRef = ref(storage, `${pfp.name + nanoid(10)}`);
+    uploadBytes(imageRef, pfp).then(() => {
+      getDownloadURL(imageRef).then((url) => {
+        const body = {
+          userId: user._id,
+          pfp: url
+        }
+        const oldPfp = user.pfp;
+        editPfp(body).then((updatedUser) => {
+          setUser(updatedUser);
+          // if the previous pfp isn't the default one, delete it
+          if(oldPfp !== "https://firebasestorage.googleapis.com/v0/b/rellytalks-a87fc.appspot.com/o/nopfp.jpg?alt=media&token=093cdedc-6747-4878-8725-bcacacb04272") {
+            const oldPfpRef = ref(storage, oldPfp.split("?")[0]); // removes the query string for ref 
+            deleteObject(oldPfpRef).catch((err) => {
+              console.error("Caught while trying to delete old pfp: ", err);
+            })
+          }
+        }).catch((err) => {
+          console.error("Caught while trying to update user: ", err);
+        });
+      }).catch((err) => {
+        console.error("Caught while trying to get the image url: ", err);
+      });
+    }).catch((err) => {
+      console.error("Caught while trying to upload image to firebase: ", err);
     });
   }
 
@@ -67,8 +102,8 @@ const Navbar = () => {
           <div className="btn btn-ghost btn-circle avatar" onClick={togglePanel}>
             <img
               alt="profile"
-              className="w-10 rounded-full"
-              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+              className="w-10 h-10 object-cover object-center ring-gray-300 ring-2 rounded-full"
+              src={user.pfp}
             />
           </div>
           {/* Dark overlay */}
@@ -87,12 +122,24 @@ const Navbar = () => {
             <div className="absolute top-3 right-3 cursor-pointer" onClick={closePanel}>
               <CloseIcon fontSize="large" />
             </div>
-            <div className="flex flex-col mt-[5vh] w-full items-center">
-              <img
-                alt="profile"
-                className="rounded-full content-fit w-32"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              />
+            <div className="flex flex-col gap-4 mt-[5vh] w-full items-center">
+              <div className="relative group cursor-pointer" onClick={() => document.getElementById("fileInput").click()}>
+                <img
+                  alt="profile"
+                  className="w-36 h-36 rounded-full object-cover object-center ring-gray-300 ring-2 transition duration-200 ease-in-out group-hover:grayscale group-hover:opactiy-50 cursor-pointer"
+                  src={user.pfp}
+                />
+                <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-0 opacity-0 underline group-hover:opacity-100 transition duration-200 ease-in-out">
+                  Edit
+                </span>
+                <input 
+                  type="file"
+                  id="fileInput"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e)}
+                />
+              </div>
               <h2 className="font-bold">{user.username}</h2>
               <p>{user.description}</p>
             </div>

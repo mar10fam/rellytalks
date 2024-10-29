@@ -18,7 +18,7 @@ const Conversation = ({ conversation, userId }) => {
             <img
                 src={user.pfp}
                 alt={`${user.username} profile`}
-                className="w-14 h-14 rounded-full mr-2"
+                className="w-14 h-14 object-cover border-2 border-neutral object-center rounded-full mr-2"
             />
             <div className="flex flex-col w-[60%] m-auto">
                 <div className="font-bold">{user.username}</div>

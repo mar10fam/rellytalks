@@ -31,7 +31,8 @@ router.post("/register", async (req, res) => {
         const newUser = await new User({
             username: req.body.username,
             email: req.body.email,
-            password: hashedPassword
+            password: hashedPassword,
+            pfp: "https://firebasestorage.googleapis.com/v0/b/rellytalks-a87fc.appspot.com/o/nopfp.jpg?alt=media&token=093cdedc-6747-4878-8725-bcacacb04272"
         });
 
         // save the user 

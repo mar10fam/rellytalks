@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import UserContext from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { getAllUsers } from '../api/user';
+import { newConversation } from '../api/conversation';
 
 const Home = () => {
     const [users, setUsers] = useState([]);
@@ -23,6 +24,20 @@ const Home = () => {
 
     const onSearch = (searchQuery) => {
         console.log("Searching!: ", searchQuery);
+    }
+
+    const handleChat = (receiverId) => {
+        newConversation(user._id, receiverId).then((res) => {
+            if(res.status === 204) {
+                // convo already exists
+                // send user to messages with the current chat as who they clicked on 
+                navigate("/messages", { state: { currentChat: res.data }});
+            } else {
+                navigate("/messages", { state: { currentChat: res.data[0] }});
+            }
+        }).catch((err) => {
+            console.error("Caught error while making new conversation from home page: ", err);
+        })
     }
 
     return (
@@ -44,21 +59,22 @@ const Home = () => {
                     </div>
                 </div>
                 <div id="users" className="bg-accent rounded-md w-[80%] h-[75%] m-auto overflow-hidden overflow-y-auto mt-[4vh]">
-                    {users.map((user, index) => {
+                    {users.map((otherUser, index) => {
+                        if(otherUser._id === user._id) return <div key={index} />
                         return (
-                            <div key={index} className="flex relative bg-neutral rounded-xl hover:ring-1 hover:ring-inset hover:ring-[#9876d1] items-center bg-white p-4 m-1">
+                            <div key={index} className="flex relative bg-neutral rounded-xl hover:ring-1 hover:ring-inset hover:ring-[#9876d1] items-center bg-white p-4 m-1 group hover:bg-secondary">
                                 <img
-                                    src={user.pfp}
-                                    alt={`${user.username} profile`}
-                                    className="w-16 h-16 rounded-full mr-6"
+                                    src={otherUser.pfp}
+                                    alt={`${otherUser.username} profile`}
+                                    className="w-16 h-16 object-cover object-center ring-gray-300 ring-2 rounded-full mr-6"
                                 />
                                 <div className="flex flex-col">
-                                    <span className="font-bold">{user.username}</span>
-                                    <span className="pr-12">{user.description}</span>
+                                    <span className="font-bold group-hover:text-white">{otherUser.username}</span>
+                                    <span className="pr-12 group-hover:text-white">{otherUser.description}</span>
                                 </div>
                                 <ChatBubbleOutlineOutlinedIcon 
-                                    className="absolute inset-y-0 right-4 flex m-auto mr-2 cursor-pointer" 
-
+                                    className="absolute inset-y-0 right-4 flex m-auto mr-2 cursor-pointer group-hover:text-white" 
+                                    onClick={() => handleChat(otherUser._id)}
                                 />
                             </div>  
                         )

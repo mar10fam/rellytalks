@@ -22,6 +22,11 @@ const findUser = (receiverId) => {
     return users.find((user) => user.userId === receiverId);
 }
 
+const checkActive = (id) => {
+    if(users.find((user) => user.userId === id)) return true;
+    return false;    
+}
+
 io.on("connection", (socket) => {
     socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
@@ -44,8 +49,12 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log("user disconnected");
         removeUser(socket.id);
-        io.emit("getUsers", users);
-    })
+    });
+
+    socket.on("checkActive", (id) => {
+        const active = checkActive(id);
+        io.emit("activeStatus", active);
+    });
 });
 
 io.listen(3002);
