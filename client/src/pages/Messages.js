@@ -18,6 +18,7 @@ const Messages = () => {
     const [messages, setMessages] = useState([]);
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const [newMessage, setNewMessage] = useState("");
+    const [friendActive, setFriendActive] = useState(false);
     
     const socket = useRef(null);
 
@@ -27,6 +28,10 @@ const Messages = () => {
     const scrollRef = useRef(null);
 
     useEffect(() => {
+        if(!user) navigate("/");
+    }, [user, navigate]);
+
+    useEffect(() => {
         socket.current = io("ws://localhost:3002");
         socket.current.on("getMessage", (data) => {
             setArrivalMessage({
@@ -34,6 +39,9 @@ const Messages = () => {
                 text: data.text,
                 createdAt: Date.now()
             })
+        })
+        socket.current.on("activeStatus", (active) => {
+            setFriendActive(active);
         })
     }, []);
 
@@ -48,18 +56,13 @@ const Messages = () => {
     }, [user])
 
     useEffect(() => {
-        if(!user) { 
-            navigate("/");
-            return;
-        }
-
         getConversations(user._id).then((res) => {
             setConversations(res);
             if(res.length > 0) setCurrentChat(res[0]);
         }).catch((err) => {
             console.error("Error attempting to get conversations: ", err);
         });
-    }, [user, navigate]);
+    }, [user]);
 
     useEffect(() => {
         // use the conversation id in currentChat to get all the messages 
@@ -69,10 +72,10 @@ const Messages = () => {
             console.error("Error getting messages for current chat: ", err);
         })
 
-        // check if the person in currentChat is active 
-        const friendId = currentChat.members.filter((member) => member !== user.userId); // get the id of friend
+        // check if the person in currentChat is active
+        const friendId = currentChat?.members.find((member) => member !== user._id); // get the id of friend
         socket.current.emit("checkActive", friendId);
-    }, [currentChat, user.userId]);
+    }, [currentChat, user]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -134,7 +137,7 @@ const Messages = () => {
                     )}
                 </div>
                 <div id="chatroom" className="flex flex-col w-[80%] bg-white">
-                    <ConvoHeader currentChat={currentChat} userId={user._id} />
+                    <ConvoHeader currentChat={currentChat} userId={user._id} friendActive={friendActive} />
                     <div id="chat-box" className="flex flex-col h-[85%]">
                         {currentChat ? <>
                             <div id="chat-messages" className="h-[90%] overflow-y-auto p-[10px]">

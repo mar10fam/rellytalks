@@ -19,12 +19,14 @@ const removeUser = (socketId) => {
 }
 
 const findUser = (receiverId) => {
+    console.log("receiverId:",receiverId);
     return users.find((user) => user.userId === receiverId);
 }
 
 const checkActive = (id) => {
-    if(users.find((user) => user.userId === id)) return true;
-    return false;    
+    const user = findUser(id);
+    if(user) return true;
+    return false; 
 }
 
 io.on("connection", (socket) => {
@@ -47,13 +49,12 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log("user disconnected");
         removeUser(socket.id);
     });
 
     socket.on("checkActive", (id) => {
         const active = checkActive(id);
-        io.emit("activeStatus", active);
+        socket.emit("activeStatus", active);
     });
 });
 

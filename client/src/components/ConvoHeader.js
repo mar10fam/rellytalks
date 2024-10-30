@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { getUser } from "../api/user";
 
-const ConvoHeader = ({ currentChat, userId }) => {
+const ConvoHeader = ({ currentChat, userId, friendActive }) => {
     const [user, setUser] = useState({});
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const ConvoHeader = ({ currentChat, userId }) => {
                     alt={`${user.username} profile`}
                     className="w-16 h-16 border-2 border-neutral object-cover object-center rounded-full"
                 /> 
-                <div id="onlineBadge" className="absolute w-[10px] h-[10px] rounded-full bg-[#32CD32] right-[4px] top-[4px]" />
+                {friendActive && <div id="onlineBadge" className="absolute w-[10px] h-[10px] rounded-full bg-[#32CD32] right-[4px] top-[4px]" />}
             </div>
             <div className="flex flex-col">
                 <div className="font-bold">{user.username}</div>
