@@ -15,11 +15,12 @@ const addUser = (userId, socketId) => {
 }
 
 const removeUser = (socketId) => {
-    users = users.filter((user) => user.socketId !== socketId);
+    const removedUser = users.find((user) => user.socketId === socketId);
+    users = users.filter((user) => user !== removedUser);
+    return removedUser;
 }
 
 const findUser = (receiverId) => {
-    console.log("receiverId:",receiverId);
     return users.find((user) => user.userId === receiverId);
 }
 
@@ -32,6 +33,7 @@ const checkActive = (id) => {
 io.on("connection", (socket) => {
     socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
+        io.emit("userOnline", userId);
     });
 
     socket.on("sendMessage", (body) => {
@@ -49,7 +51,8 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        removeUser(socket.id);
+        const user = removeUser(socket.id);
+        if(user) io.emit("userOffline", user.userId);
     });
 
     socket.on("checkActive", (id) => {

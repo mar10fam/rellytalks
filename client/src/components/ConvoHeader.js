@@ -1,18 +1,30 @@
 import { useEffect, useState } from "react"
 import { getUser } from "../api/user";
+import { io } from "socket.io-client";
 
-const ConvoHeader = ({ currentChat, userId, friendActive }) => {
+const socket = io("http://localhost:3002");
+
+const ConvoHeader = ({ currentChat, userId }) => {
     const [user, setUser] = useState({});
+    const [friendActive, setFriendActive] = useState(false);
 
     useEffect(() => {
         if(!currentChat) return;
 
-        const friendId = currentChat.members.filter((member) => member !== userId);
+        const friendId = currentChat.members.find((member) => member !== userId);
         getUser(friendId).then((user) => {
             setUser(user);
         }).catch((err) => {
             console.error("Caught error while trying to get friend in current chat: ", err);
-        })
+        });
+
+        socket.emit("checkActive", friendId);
+        socket.on("activeStatus", (active) => {
+            if(active) setFriendActive(true);
+        });
+        socket.on("userOffline", (id) => {
+            if(id === friendId) setFriendActive(false);
+        });
     }, [currentChat, userId])
 
     if(!currentChat) return;

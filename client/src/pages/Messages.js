@@ -18,7 +18,6 @@ const Messages = () => {
     const [messages, setMessages] = useState([]);
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const [newMessage, setNewMessage] = useState("");
-    const [friendActive, setFriendActive] = useState(false);
     
     const socket = useRef(null);
 
@@ -39,9 +38,6 @@ const Messages = () => {
                 text: data.text,
                 createdAt: Date.now()
             })
-        })
-        socket.current.on("activeStatus", (active) => {
-            setFriendActive(active);
         })
     }, []);
 
@@ -71,11 +67,7 @@ const Messages = () => {
         }).catch((err) => {
             console.error("Error getting messages for current chat: ", err);
         })
-
-        // check if the person in currentChat is active
-        const friendId = currentChat?.members.find((member) => member !== user._id); // get the id of friend
-        socket.current.emit("checkActive", friendId);
-    }, [currentChat, user]);
+    }, [currentChat]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -137,7 +129,7 @@ const Messages = () => {
                     )}
                 </div>
                 <div id="chatroom" className="flex flex-col w-[80%] bg-white">
-                    <ConvoHeader currentChat={currentChat} userId={user._id} friendActive={friendActive} />
+                    <ConvoHeader currentChat={currentChat} userId={user._id} />
                     <div id="chat-box" className="flex flex-col h-[85%]">
                         {currentChat ? <>
                             <div id="chat-messages" className="h-[90%] overflow-y-auto p-[10px]">
