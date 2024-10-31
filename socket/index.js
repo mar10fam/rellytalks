@@ -54,11 +54,6 @@ io.on("connection", (socket) => {
         const user = removeUser(socket.id);
         if(user) io.emit("userOffline", user.userId);
     });
-
-    socket.on("checkActive", (id) => {
-        const active = checkActive(id);
-        socket.emit("activeStatus", active);
-    });
 });
 
 io.listen(3002);

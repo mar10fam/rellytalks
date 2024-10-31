@@ -19,3 +19,14 @@ export const sendText = async (message) => {
         throw err;
     }
 }
+
+// find most recent message from convo id 
+export const getLastMsg = async (id) => {
+    try {
+        const res = await instance.get(`/message/mostRecent/${id}`);
+        console.log(res);
+        return res.data;
+    } catch(err) {
+        throw err;
+    }
+}

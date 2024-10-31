@@ -28,7 +28,7 @@ const Messages = () => {
 
     useEffect(() => {
         if(!user) navigate("/");
-    }, [user, navigate]);
+    });
 
     useEffect(() => {
         socket.current = io("ws://localhost:3002");
@@ -52,7 +52,7 @@ const Messages = () => {
     }, [user])
 
     useEffect(() => {
-        getConversations(user._id).then((res) => {
+        getConversations(user?._id).then((res) => {
             setConversations(res);
             if(res.length > 0) setCurrentChat(res[0]);
         }).catch((err) => {
@@ -116,9 +116,10 @@ const Messages = () => {
                 <div id="messages-list" className="w-[30%] flex flex-col border-r border-r-black overflow-hidden overflow-y-auto">
                     {(conversations && conversations.length > 0) ? (
                         conversations.map((convo) => {
+                            const isActive = convo?._id === currentChat?._id;
                             return (
                                <div key={convo._id} onClick={() => setCurrentChat(convo)}>
-                                    <Conversation conversation={convo} userId={user._id} />
+                                    <Conversation conversation={convo} userId={user._id} isActive={isActive} />
                                 </div> 
                             )
                         })
@@ -129,7 +130,7 @@ const Messages = () => {
                     )}
                 </div>
                 <div id="chatroom" className="flex flex-col w-[80%] bg-white">
-                    <ConvoHeader currentChat={currentChat} userId={user._id} />
+                    <ConvoHeader currentChat={currentChat} userId={user?._id} />
                     <div id="chat-box" className="flex flex-col h-[85%]">
                         {currentChat ? <>
                             <div id="chat-messages" className="h-[90%] overflow-y-auto p-[10px]">
