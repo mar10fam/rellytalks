@@ -16,7 +16,7 @@ const Landing = () => {
 
     return (
         <div className="flex items-center justify-center h-screen">
-            <div className="bg-white min-w-[35vw] min-h-[80vh] shadow-2xl rounded-lg flex flex-col p-[20px]">
+            <div className="bg-white max-w-[500px] w-[30vw] min-w-[400px] min-h-[80vh] shadow-2xl rounded-lg flex flex-col p-[20px]">
                 {/* Navbar to switch from sign in and sign up */}
                 <div className="flex justify-center mt-4">
                     <div className="relative w-[70%] bg-neutral text-white flex rounded-full overflow-hidden">

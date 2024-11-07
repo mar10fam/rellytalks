@@ -50,6 +50,11 @@ io.on("connection", (socket) => {
         });
     });
 
+    socket.on("checkActive", (id) => {
+        const activeStatus = checkActive(id);
+        socket.emit("activeStatus", activeStatus);
+    })
+
     socket.on("disconnect", () => {
         const user = removeUser(socket.id);
         if(user) io.emit("userOffline", user.userId);

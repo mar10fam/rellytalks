@@ -29,3 +29,25 @@ export const editPfp = async (body) => {
         throw err;
     }
 }
+
+// export the description of a user 
+export const editDescription = async (body) => {
+    try {
+        const res = await instance.put(`/users/${body.userId}/description`, body);
+        return res.data.updatedUser;
+    } catch(err) {
+        throw err;
+    }
+}
+
+// search for users 
+export const searchUsers = async (searchQuery) => {
+    console.log("Search Query: ", searchQuery);
+    try {
+        const res = await instance.get(`/users/search/${searchQuery}`);
+        console.log(res);
+        return res.data;
+    } catch(err) {
+        throw err;
+    }
+}

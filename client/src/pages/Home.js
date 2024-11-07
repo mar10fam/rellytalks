@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import { useContext, useEffect, useState } from 'react';
 import UserContext from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { getAllUsers } from '../api/user';
+import { getAllUsers, searchUsers } from '../api/user';
 import { newConversation } from '../api/conversation';
 
 const Home = () => {
@@ -19,12 +19,8 @@ const Home = () => {
             setUsers(users);
         }).catch((err) => {
             console.error("Caught error while trying to get all users: ", err);
-        })
+        });
     }, [user, navigate]);
-
-    const onSearch = (searchQuery) => {
-        console.log("Searching!: ", searchQuery);
-    }
 
     const handleChat = (receiverId) => {
         newConversation(user._id, receiverId).then((res) => {
@@ -40,6 +36,22 @@ const Home = () => {
         })
     }
 
+    const handleSearch = (searchQuery) => {
+        if(searchQuery === "") {
+            getAllUsers().then((users) => {
+                setUsers(users);
+            }).catch((err) => {
+                console.error("Caught error while trying to get all users: ", err);
+            });
+        } else {
+            searchUsers(searchQuery).then((users) => {
+                setUsers(users);
+            }).catch((err) => {
+                console.error("Caught while trying to search for users: ", err);
+            })
+        }
+    }
+
     return (
         <>
         <Navbar />
@@ -49,11 +61,11 @@ const Home = () => {
                     <div className="relative mt-2 rounded-md">
                         <input type="text" id="search" name="search" 
                             placeholder="Search for users" 
-                            onKeyDown={(e) => e.key === 'Enter' && onSearch(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch(e.target.value)}
                             className="block w-full rounded-md border-0 py-1.5 pl-2 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#7A4DC4]" 
                         />
                         <SearchOutlinedIcon 
-                            onClick={() => onSearch(document.getElementById('search').value)} 
+                            onClick={() => handleSearch(document.getElementById('search').value)} 
                             className="absolute inset-y-0 right-1 m-auto flex items-center cursor-pointer"
                         />
                     </div>

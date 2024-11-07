@@ -49,9 +49,7 @@ const Messages = () => {
 
     useEffect(() => {
         socket.current.emit("addUser", user?._id);
-    }, [user])
 
-    useEffect(() => {
         getConversations(user?._id).then((res) => {
             setConversations(res);
             if(res.length > 0) setCurrentChat(res[0]);

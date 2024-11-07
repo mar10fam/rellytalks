@@ -24,7 +24,6 @@ export const sendText = async (message) => {
 export const getLastMsg = async (id) => {
     try {
         const res = await instance.get(`/message/mostRecent/${id}`);
-        console.log(res);
         return res.data;
     } catch(err) {
         throw err;

@@ -18,12 +18,22 @@ const ConvoHeader = ({ currentChat, userId }) => {
             console.error("Caught error while trying to get friend in current chat: ", err);
         });
 
-        socket.on("userOnline", (id) => {
+        socket.emit("checkActive", friendId); // get the initial active status
+
+        const handleActiveStatus = (activeStatus) => {
+            setFriendActive(activeStatus);
+        }
+
+        const handleUserOnline = (id) => {
             if(id === friendId) setFriendActive(true);
-        });
-        socket.on("userOffline", (id) => {
+        }
+
+        const handleUserOffline = (id) => {
             if(id === friendId) setFriendActive(false);
-        });
+        }
+        socket.on("activeStatus", handleActiveStatus);
+        socket.on("userOnline", handleUserOnline);
+        socket.on("userOffline", handleUserOffline);
     }, [currentChat, userId])
 
     if(!currentChat) return;

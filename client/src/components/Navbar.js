@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import UserContext from '../context/AuthContext';
@@ -6,7 +6,7 @@ import { logout } from '../api/auth';
 import { storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { nanoid } from "nanoid";
-import { editPfp } from '../api/user';
+import { editDescription, editPfp } from '../api/user';
 
 const Navbar = () => {
   const location = useLocation();
@@ -16,6 +16,8 @@ const Navbar = () => {
   const { user, setUser } = useContext(UserContext);
 
   const [profilePanel, setProfilePanel] = useState(false);
+  const [newDescription, setNewDescription] = useState("");
+  const [showSave, setShowSave] = useState(false);
   
   const togglePanel = () => {
     setProfilePanel(!profilePanel);
@@ -64,6 +66,28 @@ const Navbar = () => {
       console.error("Caught while trying to upload image to firebase: ", err);
     });
   }
+
+  const handleDescriptionEdit = () => {
+    const body = {
+      userId: user._id,
+      description: newDescription
+    }
+    editDescription(body).then((updatedUser) => {
+      console.log(updatedUser);
+      setUser(updatedUser);
+      setShowSave(false);
+    }).catch((err) => {
+      console.error("Caught while trying to update description: ", err);
+    })
+  }
+
+  useEffect(() => {
+    setShowSave(newDescription !== user?.description);
+  }, [newDescription, user?.description])
+
+  useEffect(() => {
+    setNewDescription(user.description);
+  }, [user?.description])
 
   if(!user) return null;
 
@@ -141,7 +165,13 @@ const Navbar = () => {
                 />
               </div>
               <h2 className="font-bold">{user.username}</h2>
-              <p>{user.description}</p>
+              <textarea 
+                className="textarea textarea-primary w-[80%]" 
+                placeholder="Add a description" 
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)} 
+              >{user.description}</textarea>
+              {showSave && <button className="btn btn-secondary w-[50%] btn-md text-white" onClick={handleDescriptionEdit}>Save description</button>}
             </div>
             <div className="absolute bottom-10 left-0 right-0 flex justify-center">
               <button className="btn btn-primary w-[50%]" onClick={logoutHandler}>Sign Out</button>
