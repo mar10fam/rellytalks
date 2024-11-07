@@ -49,6 +49,7 @@ const SignInForm = () => {
                         validateEmail(e.target.value);
                         setEmail(e.target.value);
                     }}
+                    onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                 />
             </label>
             {!emailValid && <div className="label-text text-red-600 mt-2">Please enter an email in the correct format: example@mail.com</div>}
@@ -58,6 +59,7 @@ const SignInForm = () => {
                     onChange={(e) => {
                         setPw(e.target.value);
                     }}
+                    onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                 />
             </label>
             {!loginValid && <div className="label-text text-red-600 mt-2">Sorry, we didn't recognize that email and password</div>}
